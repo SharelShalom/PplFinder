@@ -5,16 +5,12 @@ import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
+import { ArrowRightAltTwoTone } from "@material-ui/icons";
 
 const UserList = ({ users, isLoading }) => {
   const [hoveredUserId, setHoveredUserId] = useState();
-  const[countries, setCountries] = useState([
-      {country: "Brazil", isSelected: false},  
-      {country: "Australia", isSelected: false},
-      {country: "Canada", isSelected: false},
-      {country: "Germany", isSelected: false},
-      {country: "Spain", isSelected: false}
-  ]);
+
+  const [selectedCountries, setSelectedCountries] = useState([]);
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -24,49 +20,37 @@ const UserList = ({ users, isLoading }) => {
     setHoveredUserId();
   };
 
-  const handleChange = (nameOfCountry) => {
+  const handleChange = (value) => {
     //onChange(value);
-    //Search the country that was changed in countris
-    var index=0;
-    var indexOp2;
-    for(const c of countries){
-      if(c.country === nameOfCountry){
-        indexOp2=countries.indexOf(c);
-        break;
-      }
-      index++;
-    }
 
-    const countries2 = [...countries];
-    console.log("countries: ", countries, "countries2", countries2, countries[index]);
-    countries2[index].isSelected = !countries2[index].isSelected;
-    console.log("countries: ", countries, "countries2", countries2, countries[index]);
-    setCountries( countries2 );
+    //const newSelectedCountries = [...selectedCountries];
+    //var index;
+
+    if(!selectedCountries.includes(value)) {
+      setSelectedCountries([...selectedCountries ,value]);
+      //newSelectedCountries.push(value);
+    }
+    else {
+      //index = newSelectedCountries.indexOf(value);
+      //newSelectedCountries.splice(index, 1);
+      setSelectedCountries(selectedCountries.filter(c => c!==value));
+    }
     
   };
-  
-  var countrySelected = false;
-  const countriesNames = [];
-  for(const c of countries){
-    if(c.isSelected){
-      countrySelected = true;
-      countriesNames.push(c.country)
-    }
-  }
-  //console.log(countriesNames);
-  const users2 = countrySelected ? users.filter(user => countriesNames.includes(user.location.country)) : users;
+
+  const users3 = (selectedCountries.length === 0) ? users : users.filter(user => selectedCountries.includes(user.nat));
 
   return (
     <S.UserList>
       <S.Filters>
-        <CheckBox value="BR" label="Brazil" onChange={handleChange} isChecked={countries[0].isSelected} />
-        <CheckBox value="AU" label="Australia" onChange={handleChange} isChecked={countries[1].isSelected} />
-        <CheckBox value="CA" label="Canada" onChange={handleChange} isChecked={countries[2].isSelected} />
-        <CheckBox value="DE" label="Germany" onChange={handleChange} isChecked={countries[3].isSelected} />
-        <CheckBox value="SP" label="Spain" onChange={handleChange} isChecked={countries[4].isSelected} />
+        <CheckBox value="BR" label="Brazil" onChange={handleChange} isChecked={selectedCountries.includes("BR")} />
+        <CheckBox value="AU" label="Australia" onChange={handleChange} isChecked={selectedCountries.includes("AU")} />
+        <CheckBox value="CA" label="Canada" onChange={handleChange} isChecked={selectedCountries.includes("CA")} />
+        <CheckBox value="DE" label="Germany" onChange={handleChange} isChecked={selectedCountries.includes("DE")} />
+        <CheckBox value="ES" label="Spain" onChange={handleChange} isChecked={selectedCountries.includes("ES")} />
       </S.Filters>
       <S.List>
-        {users2.map((user, index) => {
+        {users3.map((user, index) => {
           return (
             <S.User
               key={index}
