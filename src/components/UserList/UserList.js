@@ -12,6 +12,12 @@ const UserList = ({ users, isLoading }) => {
 
   const [selectedCountries, setSelectedCountries] = useState([]);
 
+  const [favoriteUsers, setFavoriteUsers] = useState([]);
+
+  useEffect(() => {
+    //setFavoriteUsers(localStorage.getItem("favoriteUsers"));
+  });
+
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
   };
@@ -36,6 +42,21 @@ const UserList = ({ users, isLoading }) => {
       setSelectedCountries(selectedCountries.filter(c => c!==value));
     }
     
+  };
+
+  const handleHeart = (id) => {
+    const favoriteUsersLocalStorage = [...favoriteUsers];
+    var index;
+    if(!favoriteUsers.includes(id)) {
+      setFavoriteUsers([...favoriteUsers, id]);
+      favoriteUsersLocalStorage.push(id);
+    }
+    else {
+      setFavoriteUsers(favoriteUsers.filter(fuser => fuser !== id));
+      index = favoriteUsersLocalStorage.indexOf(id);
+      favoriteUsersLocalStorage.splice(index, 1);
+    }
+    localStorage.setItem("favoriteUsers", JSON.stringify(favoriteUsersLocalStorage));
   };
 
   const users3 = (selectedCountries.length === 0) ? users : users.filter(user => selectedCountries.includes(user.nat));
@@ -70,7 +91,7 @@ const UserList = ({ users, isLoading }) => {
                   {user?.location.city} {user?.location.country}
                 </Text>
               </S.UserInfo>
-              <S.IconButtonWrapper isVisible={index === hoveredUserId}>
+              <S.IconButtonWrapper isVisible={index === hoveredUserId || favoriteUsers.includes(user.login.uuid)} onClick={() => handleHeart(user.login.uuid)}>
                 <IconButton>
                   <FavoriteIcon color="error" />
                 </IconButton>
