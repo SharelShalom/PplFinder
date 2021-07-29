@@ -1,13 +1,21 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 const NavBar = () => {
   const [value, setValue] = useState(0);
+  const history = useHistory();
 
   const handleChange = (_e, newValue) => {
     setValue(newValue);
+    if(newValue === 0) {
+      history.push("/");
+    }
+    else if(newValue === 1) {
+      history.push("/favorites");
+    }
   };
 
   return (

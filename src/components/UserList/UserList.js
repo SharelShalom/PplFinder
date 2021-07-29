@@ -1,22 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Text from "components/Text";
 import Spinner from "components/Spinner";
 import CheckBox from "components/CheckBox";
 import IconButton from "@material-ui/core/IconButton";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import * as S from "./style";
+import FavoriteContext from "theme/context";
 import { ArrowRightAltTwoTone } from "@material-ui/icons";
 
 const UserList = ({ users, isLoading }) => {
+
   const [hoveredUserId, setHoveredUserId] = useState();
 
   const [selectedCountries, setSelectedCountries] = useState([]);
 
-  const [favoriteUsers, setFavoriteUsers] = useState([]);
+  const {profileFavorites, setProfileFavorites} = useContext(FavoriteContext);
 
   useEffect(() => {
-    //setFavoriteUsers(localStorage.getItem("favoriteUsers"));
-  });
+    const savedFavoriteUsers = JSON.parse(localStorage.getItem("profileFavorites"));
+    if (savedFavoriteUsers)
+      setProfileFavorites(savedFavoriteUsers);
+  }, []);
 
   const handleMouseEnter = (index) => {
     setHoveredUserId(index);
@@ -29,34 +33,29 @@ const UserList = ({ users, isLoading }) => {
   const handleChange = (value) => {
     //onChange(value);
 
-    //const newSelectedCountries = [...selectedCountries];
-    //var index;
-
     if(!selectedCountries.includes(value)) {
       setSelectedCountries([...selectedCountries ,value]);
-      //newSelectedCountries.push(value);
     }
     else {
-      //index = newSelectedCountries.indexOf(value);
-      //newSelectedCountries.splice(index, 1);
       setSelectedCountries(selectedCountries.filter(c => c!==value));
-    }
-    
+    }    
   };
 
-  const handleHeart = (id) => {
-    const favoriteUsersLocalStorage = [...favoriteUsers];
+
+  const handleHeart = (user) => {
+    const profileFavoritesLocalStorage = [...profileFavorites];
+
     var index;
-    if(!favoriteUsers.includes(id)) {
-      setFavoriteUsers([...favoriteUsers, id]);
-      favoriteUsersLocalStorage.push(id);
+    if(!profileFavorites.includes(user)) {
+      setProfileFavorites([...profileFavorites, user])
+      profileFavoritesLocalStorage.push(user);
     }
     else {
-      setFavoriteUsers(favoriteUsers.filter(fuser => fuser !== id));
-      index = favoriteUsersLocalStorage.indexOf(id);
-      favoriteUsersLocalStorage.splice(index, 1);
+      setProfileFavorites(profileFavorites.filter(fuser => fuser !== user));
+      index = profileFavoritesLocalStorage.indexOf(user);
+      profileFavoritesLocalStorage.splice(index, 1);
     }
-    localStorage.setItem("favoriteUsers", JSON.stringify(favoriteUsersLocalStorage));
+    localStorage.setItem("profileFavorites", JSON.stringify(profileFavoritesLocalStorage));
   };
 
   const users3 = (selectedCountries.length === 0) ? users : users.filter(user => selectedCountries.includes(user.nat));
@@ -91,7 +90,7 @@ const UserList = ({ users, isLoading }) => {
                   {user?.location.city} {user?.location.country}
                 </Text>
               </S.UserInfo>
-              <S.IconButtonWrapper isVisible={index === hoveredUserId || favoriteUsers.includes(user.login.uuid)} onClick={() => handleHeart(user.login.uuid)}>
+              <S.IconButtonWrapper isVisible={index === hoveredUserId || profileFavorites.includes(user)} onClick={() => handleHeart(user)}>
                 <IconButton>
                   <FavoriteIcon color="error" />
                 </IconButton>

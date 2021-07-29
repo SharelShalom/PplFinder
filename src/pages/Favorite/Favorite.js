@@ -1,12 +1,14 @@
-import React from "react";
+import React, {useContext} from "react";
 import Text from "components/Text";
 import UserList from "components/UserList";
 import { usePeopleFetch } from "hooks";
+import FavoriteContext from "theme/context";
 import * as S from "./style";
 
-const Favorite = () => {
+const Favorites = () => {
   const { users, isLoading } = usePeopleFetch();
-
+  const {profileFavorites, setProfileFavorites} = useContext(FavoriteContext);
+  
   return (
     <S.Favorite>
       <S.Content>
@@ -15,10 +17,10 @@ const Favorite = () => {
             PplFinder - Favorites
           </Text>
         </S.Header>
-        <UserList users={users} isLoading={isLoading} />
+        <UserList users={profileFavorites} isLoading={isLoading} />
       </S.Content>
     </S.Favorite>
   );
 };
 
-export default Favorite;
+export default Favorites;
