@@ -10,9 +10,14 @@ const AppRouter = () => {
   const [favoriteUsers, setFavoriteUsers] = useState([]);
   const [profileFavorites, setProfileFavorites] = useState([]);
 
+  //Infinity scroll
+  
+  const [numOfPage, setNumOfPage] = useState(0);
+  const [isBottom, setIsBottom] = useState(false);
+
   return (
     <ThemeProvider>
-      <FavoriteContext.Provider value = {{ favoriteUsers, setFavoriteUsers, profileFavorites, setProfileFavorites }}>
+      <FavoriteContext.Provider value = {{ favoriteUsers, setFavoriteUsers, profileFavorites, setProfileFavorites, numOfPage, setNumOfPage, isBottom, setIsBottom }}>
        <Router>
         <NavBar />
         <Switch>

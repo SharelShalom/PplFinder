@@ -19,6 +19,7 @@ export const User = styled.div`
   display: flex;
   justify-content: center;
   gap: 16px;
+  margin: 10px;
 `;
 
 export const UserInfo = styled.div`

@@ -5,30 +5,23 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 const NavBar = () => {
-  const [value, setValue] = useState(0);
   const history = useHistory();
 
-  const handleChange = (_e, newValue) => {
-    setValue(newValue);
-    if(newValue === 0) {
-      history.push("/");
-    }
-    else if(newValue === 1) {
-      history.push("/favorites");
-    }
+  const handleChange = (e, newValue) => {
+    history.push(newValue);
   };
 
   return (
     <AppBar position="static" color="transparent" style={{ position: "fixed", top: 0 }}>
       <Tabs
-        value={value}
+        value={history.location.pathname}
         onChange={handleChange}
         aria-label="Navigation"
         indicatorColor="primary"
         textColor="primary"
       >
-        <Tab label="Home" index={0} />
-        <Tab label="Favorites" index={1} />
+        <Tab value='/' label="Home" />
+        <Tab value='/favorites' label="Favorites" />
       </Tabs>
     </AppBar>
   );
